@@ -34,28 +34,22 @@ public with sharing class QuickDataUtility {
         }
         
         List<sObject> sobjListSource = Database.query(defaultQuerySource);
-        System.debug('>>sobjListSource' + sobjListSource);
         Map<String,String> mapStampToIdSource = new Map<String,String>();
         for(sObject item : sobjListSource) {
             mapStampToIdSource.put( String.valueOf(item.get(sObjectSourceStamp)),item.Id);                        
         }
-        System.debug('>>mapStampToIdSource: ' + mapStampToIdSource);
         
         String defaultQueryTarget = 'Select Id, ' +  sObjectTargetStamp + ' from ' + sObjectTarget + ' where ' + sObjectTargetStamp + ' != null' ;
         List<sObject> sobjListTarget = Database.query(defaultQueryTarget);
-        System.debug('>>sobjListTarget' + sobjListTarget);
         Map<String,String> mapStampToIdTarget = new Map<String,String>();
         for(sObject item : sobjListTarget) {
             mapStampToIdTarget.put( String.valueOf(item.get(sObjectTargetStamp)),item.Id);
         }
-		System.debug('>>mapStampToIdTarget: ' + mapStampToIdTarget);
         
         if(sobjListSource.size() > 0) {
             for(sObject item : sobjListSource) {
-                //System.debug('>> ' + item.Id);
                 String itemId = String.valueOf(item.Id);
                 if(mapStampToIdTarget.get(String.valueOf(item.get(sObjectSourceStamp))) != null ) {
-                    System.debug('ID to set : ' +  mapStampToIdTarget.get(String.valueOf(item.get(sObjectSourceStamp))) );
                     item.put(sourceLookupId, mapStampToIdTarget.get(String.valueOf(item.get(sObjectSourceStamp))) );                        
                     sobjListToUpdate.add(item);
                 }
